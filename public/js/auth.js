@@ -71,6 +71,7 @@ window.updateUserDisplay = function() {
           <i class="fa-solid fa-user"></i> ${user.nombre}
         </button>
         <ul class="dropdown-menu dropdown-menu-end">
+          <li><button class="dropdown-item" onclick="showOrders()">Mis Pedidos</button></li>
           <li><button class="dropdown-item" onclick="showHistory()">Historial</button></li>
           <li><hr class="dropdown-divider"></li>
           <li><button class="dropdown-item text-danger" onclick="logout()">Cerrar Sesión</button></li>
@@ -86,6 +87,10 @@ window.updateUserDisplay = function() {
 
 window.showHistory = function() {
   import('./history.js').then(m => m.showHistory());
+};
+
+window.showOrders = function() {
+  import('./orders.js').then(m => m.showOrders());
 };
 
 document.addEventListener("DOMContentLoaded", () => {

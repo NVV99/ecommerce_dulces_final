@@ -1,33 +1,38 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const ordersContainer = document.getElementById('order-history');
+import { apiFetch } from './api.js';
 
-  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+export async function showOrders() {
+  const modalEl   = document.getElementById('ordersModal');
+  const modal     = new bootstrap.Modal(modalEl);
+  const container = document.getElementById('order-history');
 
-  if (!currentUser) {
-    ordersContainer.innerHTML = `<p>Debes iniciar sesión para ver tus pedidos.</p>`;
-    return;
+  container.innerHTML = '<p>Cargando pedidos...</p>';
+
+  try {
+    const orders = await apiFetch('/orders');
+
+
+
+    if (!orders.length) {
+      container.innerHTML = '<p>Aún no tienes pedidos registrados.</p>';
+    } else {
+      container.innerHTML = `
+        <ul class="list-group">
+          ${orders.map(o => `
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                <strong>Pedido:</strong> ${o.id}<br>
+                <strong>Fecha:</strong> ${new Date(o.fecha).toLocaleDateString()}<br>
+                <strong>Total:</strong> €${o.total.toFixed(2)}
+              </div>
+            </li>
+          `).join('')}
+        </ul>
+      `;
+    }
+  } catch (err) {
+    console.error('Error cargando pedidos:', err);
+    container.innerHTML = '<p class="text-danger">Error al cargar tus pedidos.</p>';
   }
+   modal.show();
+}
 
-  const orders = currentUser.orders || [];
-
-  if (orders.length === 0) {
-    ordersContainer.innerHTML = `<p>Aún no tienes pedidos registrados.</p>`;
-    return;
-  }
-
-  let html = '<ul class="list-group">';
-  orders.forEach(order => {
-    html += `
-      <li class="list-group-item d-flex justify-content-between align-items-center">
-        <div>
-          <strong>Pedido:</strong> ${order.id}<br>
-          <strong>Fecha:</strong> ${new Date(order.date).toLocaleDateString()}<br>
-          <strong>Total:</strong> ${order.total.toFixed(2)} €
-        </div>
-      </li>
-    `;
-  });
-  html += '</ul>';
-
-  ordersContainer.innerHTML = html;
-});

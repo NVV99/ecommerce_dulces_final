@@ -242,7 +242,7 @@
     <h2 class="text-center">Contáctanos</h2>
     <p class="text-center">Si tienes alguna pregunta o sugerencia, envíanos un mensaje a través del siguiente formulario.</p>
     <div class="contact-form mx-auto">
-        <form action="send_email.php" method="POST">
+         <form method="POST" onsubmit="sendContact(event)">
             <div class="mb-3">
                 <label for="name" class="form-label">Nombre</label>
                 <input type="text" class="form-control" id="name" name="name" required>
