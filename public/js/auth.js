@@ -71,6 +71,7 @@ window.updateUserDisplay = function() {
           <i class="fa-solid fa-user"></i> ${user.nombre}
         </button>
         <ul class="dropdown-menu dropdown-menu-end">
+          <li><button class="dropdown-item" onclick="showAccount()">Configurar Cuenta</button></li>
           <li><button class="dropdown-item" onclick="showOrders()">Mis Pedidos</button></li>
           <li><button class="dropdown-item" onclick="showHistory()">Historial</button></li>
           <li><hr class="dropdown-divider"></li>

@@ -1,3 +1,7 @@
+import { PRODUCTS } from './data.js';
+import { addToCart } from './cart.js';
+import { showProduct } from './products.js';
+
 // Carrusel de Banners (Bootstrap) 
 document.addEventListener("DOMContentLoaded", function () {
   const myCarousel = new bootstrap.Carousel("#carouselExample", {
@@ -17,15 +21,27 @@ document.addEventListener("DOMContentLoaded", function () {
     const slide = document.createElement("div");
     slide.className = "swiper-slide";
     slide.innerHTML = `
-      <div class="card h-100 shadow-sm product-card" data-id="${product.id}" style="cursor: pointer;">
+       <div class="card h-100 shadow-sm product-card">
         <img src="${product.image}" class="card-img-top" alt="${product.name}">
-        <div class="card-body d-flex flex-column justify-content-between">
+        <div class="card-body d-flex flex-column">
           <h5 class="card-title">${product.name}</h5>
           <p class="product-price">${product.price.toFixed(2)} €</p>
+          <div class="mt-auto d-grid gap-2">
+            <button class="btn btn-outline-secondary view-product-btn">Ver producto</button>
+            <button class="btn btn-pink add-to-cart-btn"><i class="fa-solid fa-cart-plus"></i> Añadir al carrito</button>
+          </div>
         </div>
       </div>
     `;
     destacadosContainer.appendChild(slide);
+
+    
+    slide.querySelector('.view-product-btn').addEventListener('click', () => {
+      showProduct(product.id);
+    });
+    slide.querySelector('.add-to-cart-btn').addEventListener('click', () => {
+      addToCart(product.id, product.name, product.price);
+    });
   });
 
   // Swiper Inicialización

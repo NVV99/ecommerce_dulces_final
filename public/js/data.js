@@ -1,4 +1,4 @@
-const PRODUCTS = [
+export const PRODUCTS = [
   // Bebidas
   {
     id: "bebida-coreana-uva-roja-hello-kitty",
@@ -380,3 +380,5 @@ const PRODUCTS = [
     valorCalorico: 260
   }
 ];
+
+window.PRODUCTS = PRODUCTS;

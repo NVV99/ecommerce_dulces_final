@@ -27,6 +27,11 @@ window.changePassword = async function(e) {
   alert(resp.message);
 };
 
+window.showAccount = function() {
+  loadProfile();
+  bootstrap.Modal.getOrCreateInstance(document.getElementById('accountModal')).show();
+};
+
 document.addEventListener("DOMContentLoaded", () => {
   if (document.getElementById('account-form')) {
     loadProfile();
