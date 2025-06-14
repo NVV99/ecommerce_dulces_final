@@ -5,7 +5,7 @@ const router = express.Router();
 const db = require('../config/db');
 const bcrypt = require('bcrypt');
 const authMiddleware = require('../middlewares/authMiddleware');
-const User = require('../models/User'); // para findByEmail y verifyPassword
+const User = require('../models/user'); // para findByEmail y verifyPassword
 
 /*
     GET /api/users/me
