@@ -23,6 +23,8 @@ app.use('/api/categories', require('./routes/categories'));
 app.use('/api/orders', require('./routes/orders'));
 app.use('/api/payments', require('./routes/payments'));
 app.use('/api/contact', require('./routes/contact'));
+app.use(express.static(path.join(__dirname, '../public')));
+
 
 // Test DB
 (async () => {

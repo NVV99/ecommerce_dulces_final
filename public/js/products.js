@@ -33,29 +33,33 @@ export async function loadProducts() {
 
     // Mapea y convierte precio a número
       const html = productos.map(p => {
-        const priceNum = parseFloat(p.precio);
+        const priceNum = parseFloat(p.precio ?? p.price);
         return `
-        <div class="col-md-4">
-          <div class="card h-100">
-            <img src="${p.imagen}" class="card-img-top" alt="${p.nombre}">
-            <div class="card-body d-flex flex-column">
-              <h5 class="card-title">${p.nombre}</h5>
-              <p class="card-text">${p.descripcion}</p>
-              <p class="mt-auto fw-bold">€${priceNum.toFixed(2)}</p>
-               <div class="d-grid gap-2">
-                <button class="btn btn-outline-secondary view-product-btn" data-product-id="${p.id}">Ver producto</button>
-                <button class="btn btn-pink add-to-cart-btn" data-product-id="${p.id}" data-name="${p.nombre}" data-price="${priceNum}">
-                  <i class="fa-solid fa-cart-plus"></i> Añadir al carrito
-                </button>
+          <div class="col-12 col-sm-6 col-md-4 mb-4 d-flex align-items-stretch">
+            <div class="card w-100 h-100">
+              <img src="${p.imagenes && p.imagenes.length ? p.imagenes[0] : ''}"
+              class="card-img-top"
+              alt="${p.nombre}">
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">${p.nombre}</h5>
+                <p class="card-text">${p.descripcion}</p>
+                <p class="mt-auto fw-bold">€${priceNum.toFixed(2)}</p>
+                <div class="d-grid gap-2">
+                  <button class="btn btn-outline-secondary view-product-btn" data-product-id="${p.id}">
+                    Ver producto
+                  </button>
+                  <button class="btn btn-pink add-to-cart-btn" data-product-id="${p.id}" data-name="${p.nombre}" data-price="${priceNum}">
+                    <i class="fa-solid fa-cart-plus"></i> Añadir al carrito
+                  </button>
+                </div>
               </div>
+            </div>
           </div>
-        </div>
-      `;
+        `;
       }).join('');
 
-    console.log('Generated HTML for cards, injecting into container');
     cont.innerHTML = html;
-    
+        
     // Añadir evento a cada botón de añadir al carrito
      cont.querySelectorAll('.add-to-cart-btn').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -84,7 +88,7 @@ export async function showProduct(id){
     const data = await apiFetch(`/products/${id}`);
     currentProduct = data;
     document.getElementById('modal-title').textContent = data.nombre;
-    document.getElementById('modal-img').src = data.imagen;
+    document.getElementById('modal-img').src = data.imagenes && data.imagenes.length ? data.imagenes[0] : 'img/placeholder.png';
     document.getElementById('modal-description').textContent = data.descripcion || '';
     document.getElementById('modal-price').textContent = `€${parseFloat(data.precio).toFixed(2)}`;
     document.getElementById('quantity-modal').textContent = '1';
