@@ -1,9 +1,15 @@
 export function getCart() { return JSON.parse(localStorage.getItem('cart')||'[]'); }
 export function saveCart(c){ localStorage.setItem('cart', JSON.stringify(c)); }
-export function addToCart(id){ 
+export function addToCart(id, name, price, qty = 1){
   const c = getCart();
   const it = c.find(x=>x.productId===id);
-  if(it) it.quantity++; else c.push({productId:id,quantity:1});
+  if(it){
+    it.quantity += qty;
+    if(price) it.unitPrice = price;
+    if(name)  it.name = name;
+  } else {
+    c.push({productId:id, name, unitPrice:price, quantity:qty});
+  }
   saveCart(c);
   document.getElementById('cart-count').textContent = c.reduce((s,x)=>s+x.quantity,0);
 }
@@ -11,7 +17,7 @@ export function loadCartModal(){
   const c = getCart(), body=document.getElementById('cart-items'), totEl=document.getElementById('cart-total');
   body.innerHTML = c.map(i=>`
     <tr>
-      <td>Producto ${i.productId}</td>
+      <td>${i.name || 'Producto '+i.productId}</td>
       <td>${i.quantity}</td>
       <td>€${(i.unitPrice||0).toFixed(2)}</td>
     </tr>
