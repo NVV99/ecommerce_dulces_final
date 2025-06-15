@@ -1,4 +1,3 @@
-// backend/seed.js
 const fs   = require('fs');
 const path = require('path');
 const db   = require('./config/db');          // aquí tienes el pool promise
@@ -10,15 +9,15 @@ async function seed() {
 
     // 1) Ejecutar DDL
     await db.query(schemaSql);
-    console.log('✅ Schema importado');
+    console.log('Schema importado');
 
     // 2) Ejecutar INSERTs
     await db.query(seedSql);
-    console.log('✅ Datos semilla importados');
+    console.log('Datos semilla importados');
 
     process.exit(0);
   } catch (err) {
-    console.error('❌ Error al poblar la BBDD:', err);
+    console.error('Error al poblar la BBDD:', err);
     process.exit(1);
   }
 }

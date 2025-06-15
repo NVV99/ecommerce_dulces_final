@@ -28,7 +28,7 @@ window.showHistory = async function() {
               <tr>
                 <td>${o.id}</td>
                 <td>${new Date(o.fecha).toLocaleString()}</td>
-                <td>€${o.total.toFixed(2)}</td>
+                <td>€${parseFloat(o.total).toFixed(2)}</td>
                 <td>${o.estado}</td>
               </tr>
             `).join('')}

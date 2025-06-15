@@ -22,7 +22,7 @@ export async function showOrders() {
               <div>
                 <strong>Pedido:</strong> ${o.id}<br>
                 <strong>Fecha:</strong> ${new Date(o.fecha).toLocaleDateString()}<br>
-                <strong>Total:</strong> €${o.total.toFixed(2)}
+                <strong>Total:</strong> €${parseFloat(o.total).toFixed(2)}
               </div>
             </li>
           `).join('')}

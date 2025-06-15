@@ -23,10 +23,11 @@ export async function loadProducts() {
     // Mapea y convierte precio a número
       const html = productos.map(p => {
         const priceNum = parseFloat(p.precio ?? p.price);
+        const imgSrc = p.imagen || (p.imagenes && p.imagenes.length ? p.imagenes[0] : '');
         return `
           <div class="col-12 col-sm-6 col-md-4 mb-4 d-flex align-items-stretch">
             <div class="card w-100 h-100">
-              <img src="${p.imagenes && p.imagenes.length ? p.imagenes[0] : ''}"
+              <img src="${imgSrc}"
               class="card-img-top"
               alt="${p.nombre}">
               <div class="card-body d-flex flex-column">
@@ -103,5 +104,5 @@ window.addToCartFromModal = function(){
   const qty = Number(document.getElementById('quantity-modal').textContent);
   addToCart(currentProduct.id, currentProduct.nombre, parseFloat(currentProduct.precio), qty);
   bootstrap.Modal.getInstance(document.getElementById('productModal')).hide();
-  
+
 }

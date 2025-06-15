@@ -15,6 +15,7 @@ window.submitOrder = async function() {
   if(resp.orderId){
     alert(`Pedido ${resp.orderId} creado`);
     saveCart([]);
-    window.location.href='orders.html';
+    const ordersModule = await import('./orders.js');
+    ordersModule.showOrders();
   } else alert(resp.message||'Error');
 };
