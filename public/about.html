@@ -238,28 +238,25 @@
         </div>
     </div>
 
-    <!-- Sección de contacto -->
-<div class="container mt-5">
-    <h2 class="text-center">Contáctanos</h2>
-    <p class="text-center">Si tienes alguna pregunta o sugerencia, envíanos un mensaje a través del siguiente formulario.</p>
-    <div class="contact-form mx-auto">
-         <form onsubmit="sendContact(event)">
-            <div class="mb-3">
-                <label for="name" class="form-label">Nombre</label>
-                <input type="text" class="form-control" id="name" name="name" required>
-            </div>
-            <div class="mb-3">
-                <label for="email" class="form-label">Correo Electrónico</label>
-                <input type="email" class="form-control" id="email" name="email" required>
-            </div>
-            <div class="mb-3">
-                <label for="message" class="form-label">Mensaje</label>
-                <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-gradient w-100">Enviar Mensaje</button>
-    </div>
-</div>
-
+ <!-- Sección de Contacto -->
+  <section class="container mt-5">
+    <h2 class="text-center mb-4">Contáctanos</h2>
+    <form id="contact-form" class="mx-auto" style="max-width:600px">
+      <div class="mb-3">
+        <label for="contact-nombre" class="form-label">Nombre</label>
+        <input type="text" id="contact-nombre" name="nombre" class="form-control" required/>
+      </div>
+      <div class="mb-3">
+        <label for="contact-email" class="form-label">Correo Electrónico</label>
+        <input type="email" id="contact-email" name="email" class="form-control" required/>
+      </div>
+      <div class="mb-3">
+        <label for="contact-mensaje" class="form-label">Mensaje</label>
+        <textarea id="contact-mensaje" name="mensaje" class="form-control" rows="5" required></textarea>
+      </div>
+      <button type="submit" class="btn btn-gradient w-100">Enviar Mensaje</button>
+    </form>
+  </section>
 
      <!-- Footer -->
     <footer class="bg-dark text-white py-5">

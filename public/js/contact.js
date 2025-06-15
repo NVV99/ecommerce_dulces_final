@@ -1,13 +1,33 @@
+// public/js/contact.js
 import { apiFetch } from './api.js';
 
-window.sendContact = async function(e) {
+const form = document.getElementById('contact-form');
+form.addEventListener('submit', async e => {
   e.preventDefault();
-  const f = e.target;
+
   const data = {
-    nombre:  f.name?.value || '',
-    email:   f.email?.value || '',
-    mensaje: f.message.value
+    nombre:  form.nombre.value.trim(),
+    email:   form.email.value.trim(),
+    mensaje: form.mensaje.value.trim()
   };
-  const resp = await apiFetch('/contact', { method:'POST', body: JSON.stringify(data) });
-  alert(resp.message);
-};
+
+  if (!data.nombre || !data.email || !data.mensaje) {
+    return alert('Por favor, rellena todos los campos.');
+  }
+
+  try {
+    const res = await apiFetch('/contact', {
+      method: 'POST',
+      body: data
+    });
+    if (res.ok) {
+      alert(res.message || 'Mensaje enviado correctamente.');
+      form.reset();
+    } else {
+      alert(res.message || 'Error enviando el mensaje.');
+    }
+  } catch (err) {
+    console.error(err);
+    alert('Error de red al enviar el mensaje.');
+  }
+});

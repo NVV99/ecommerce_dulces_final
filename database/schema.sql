@@ -118,12 +118,14 @@ CREATE TABLE historial_stock (
 );
 
 -- Mensajes de Contacto
-CREATE TABLE mensajes_contacto (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    usuario_id INT,
-    nombre VARCHAR(100),
-    email VARCHAR(100),
-    mensaje TEXT NOT NULL,
-    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE SET NULL
-);
+-- database/schema.sql
+
+CREATE TABLE IF NOT EXISTS mensajes_contacto (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  usuario_id INT NULL,
+  nombre    VARCHAR(100) NOT NULL,
+  email     VARCHAR(150) NOT NULL,
+  mensaje   TEXT NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  INDEX(usuario_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
