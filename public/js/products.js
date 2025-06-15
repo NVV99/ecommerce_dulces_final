@@ -2,28 +2,21 @@ import { apiFetch } from './api.js';
 import { addToCart } from './cart.js'; 
 
 // 1) Ver que el módulo se carga
-console.log('products.js module loaded');
 
 // 2) Comprueba el dataset del body
-console.log('Body data-section:', document.body.dataset.section);
 
 // Espera a que cargue el DOM
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('DOMContentLoaded event fired');
   if (document.body.dataset.section === 'products') {
-    console.log('Section is "products", calling loadProducts()');
     loadProducts();
   } else {
-    console.log('Not on products page, section =', document.body.dataset.section);
   }
 });
 
 // 3) Función para cargar productos
 export async function loadProducts() {
-  console.log('loadProducts() started');
   try {
     const productos = await apiFetch('/products');
-    console.log('API returned productos:', productos);
 
     const cont = document.getElementById("productos-container");
     if (!cont) {
