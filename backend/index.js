@@ -7,11 +7,6 @@ const path= require('path');
 const errorHandler = require('./middlewares/errorMiddleware');
 
 app.use('/api/webhook', require('./routes/webhook'));
-
-
-app.use(express.static(path.join(__dirname, '../public')));
-
-
 app.use(cors());
 app.use(express.json());
 
