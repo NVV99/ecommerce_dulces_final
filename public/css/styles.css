@@ -297,9 +297,10 @@ footer p {
 }
 
 .card-img-top {
-    width: 100%;
-    height: 220px;
-    object-fit: cover;
+  width: 100%;
+  height: 200px;       /* prueba con 180px o el tamaño que necesites */
+  object-fit: cover;   /* rellena el recuadro recortando lo sobrante */
+  display: block;
 }
 
 
