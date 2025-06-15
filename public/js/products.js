@@ -63,7 +63,7 @@ export async function loadProducts() {
     // Añadir evento a cada botón de añadir al carrito
      cont.querySelectorAll('.add-to-cart-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-          const productId = Number(btn.getAttribute('data-product-id'));
+          const productId = btn.getAttribute('data-product-id');
           const price = parseFloat(btn.getAttribute('data-price'));
           const name  = btn.getAttribute('data-name');
           addToCart(productId, name, price);

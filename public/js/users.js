@@ -1,7 +1,9 @@
 import { apiFetch } from './api.js';
 
 window.loadProfile = async function() {
+  if (!localStorage.getItem('token')) return;
   const u = await apiFetch('/users/me');
+  if (!u) return;
   document.getElementById('account-username').value = u.nombre;
   document.getElementById('account-email').value    = u.email;
 };

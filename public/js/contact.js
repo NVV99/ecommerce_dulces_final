@@ -2,6 +2,7 @@ import { apiFetch } from './api.js';
 
 window.sendContact = async function(e) {
   e.preventDefault();
+  const f = e.target;
   const data = {
     nombre:  f.name?.value || '',
     email:   f.email?.value || '',

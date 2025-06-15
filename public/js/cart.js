@@ -21,7 +21,7 @@ export function loadCartModal(){
       <td>${i.name || 'Producto '+i.productId}</td>
       <td>${i.quantity}</td>
       <td>€${(i.unitPrice||0).toFixed(2)}</td>
-      <td><button class="btn btn-sm btn-danger" onclick="removeFromCart(${i.productId})">&times;</button></td>
+      <td><button class="btn btn-sm btn-danger" onclick="removeFromCart('${i.productId}')">&times;</button></td>
     </tr>
   `).join('');
   totEl.textContent = c.reduce((s,x)=>(x.unitPrice||0)*x.quantity+s,0).toFixed(2);

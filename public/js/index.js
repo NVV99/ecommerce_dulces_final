@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
     slide.className = "swiper-slide";
     slide.innerHTML = `
        <div class="card h-100 shadow-sm product-card">
-        <img src="${product.image}" class="card-img-top" alt="${product.name}">
+        <img src="${product.imagenes && product.imagenes.length ? product.imagenes[0] : ''}" class="card-img-top" alt="${product.name}">
         <div class="card-body d-flex flex-column">
           <h5 class="card-title">${product.name}</h5>
           <p class="product-price">${product.price.toFixed(2)} €</p>
