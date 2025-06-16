@@ -1,58 +1,69 @@
+// backend/controllers/orderController.js
+
 const db = require('../config/db');
 
-// Crear un pedido
-exports.createOrder = (req, res, next) => {
-  const { user_id, items, total } = req.body;
-  db.query(
-    'INSERT INTO pedidos (user_id, total, estado) VALUES (?, ?, "pendiente")',
-    [user_id, total],
-    (err, result) => {
-      if (err) return next(err);
-      const orderId = result.insertId;
-      const detalles = items.map(i => [orderId, i.producto_id, i.cantidad, i.precio]);
-      db.query(
-        'INSERT INTO detalles_pedido (pedido_id, producto_id, cantidad, precio) VALUES ?',
-        [detalles],
-        err2 => {
-          if (err2) return next(err2);
-          // Ajustar stock
-          items.forEach(i => {
-            db.query(
-              'UPDATE productos SET stock = stock - ? WHERE id = ?',
-              [i.cantidad, i.producto_id],
-              () => {}
-            );
-          });
-          res.status(201).json({ orderId, msg: 'Pedido creado' });
-        }
+async function createOrder(req, res, next) {
+  const userId = req.user.id;
+  const { fullName, address, city, zip, phone, total, items } = req.body;
+
+  // Validaciones
+  if (!fullName || !address || !city || !zip || !phone) {
+    return res.status(400).json({ message: 'Completa todos los datos de envío.' });
+  }
+  if (!Array.isArray(items) || items.length === 0) {
+    return res.status(400).json({ message: 'El carrito está vacío.' });
+  }
+
+  const conn = await db.getConnection();
+  try {
+    await conn.beginTransaction();
+
+    // 1) Insertar dirección de envío
+    const [addr] = await conn.query(
+      `INSERT INTO direcciones_envio
+         (usuario_id, calle, ciudad, codigo_postal, pais)
+       VALUES (?, ?, ?, ?, ?)`,
+      [userId, address, city, zip, 'España']
+    );
+    const direccionEnvioId = addr.insertId;
+
+    // 2) Insertar registro en pedidos
+    const [ord] = await conn.query(
+      `INSERT INTO pedidos
+         (usuario_id, direccion_envio_id, total, estado, fecha)
+       VALUES (?, ?, ?, 'pendiente', NOW())`,
+      [userId, direccionEnvioId, total]
+    );
+    const pedidoId = ord.insertId;
+
+    // 3) Insertar detalles del pedido (buscando ID por nombre)
+    for (const item of items) {
+      const [rows] = await conn.query(
+        'SELECT id FROM productos WHERE nombre = ?',
+        [item.name]
+      );
+      if (rows.length === 0) {
+        return res.status(400).json({ message: `Producto no encontrado en BD: ${item.name}` });
+      }
+      const productoId = rows[0].id;
+
+      await conn.query(
+        `INSERT INTO detalles_pedido
+           (pedido_id, producto_id, cantidad, precio_unitario)
+         VALUES (?, ?, ?, ?)`,
+        [pedidoId, productoId, item.quantity, item.unitPrice]
       );
     }
-  );
-};
 
-// Obtener pedidos por usuario
-exports.getOrdersByUser = (req, res, next) => {
-  const userId = req.user.id;
-  db.query(
-    'SELECT * FROM pedidos WHERE user_id = ? ORDER BY fecha_creacion DESC',
-    [userId],
-    (err, results) => {
-      if (err) return next(err);
-      res.json(results);
-    }
-  );
-};
+    await conn.commit();
+    return res.status(201).json({ orderId: pedidoId });
+  } catch (err) {
+    await conn.rollback();
+    console.error('[createOrder error]', err);
+    return res.status(500).json({ message: 'Error interno al crear el pedido.' });
+  } finally {
+    conn.release();
+  }
+}
 
-// Actualizar estado (admin)
-exports.updateOrderStatus = (req, res, next) => {
-  const { id } = req.params;
-  const { estado } = req.body;
-  db.query(
-    'UPDATE pedidos SET estado = ? WHERE id = ?',
-    [estado, id],
-    err => {
-      if (err) return next(err);
-      res.json({ msg: 'Estado actualizado' });
-    }
-  );
-};
+module.exports = { createOrder };

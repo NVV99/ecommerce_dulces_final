@@ -1,72 +1,77 @@
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { validationResult } = require('express-validator');
 const User = require('../models/user');
 const JWT_SECRET = process.env.JWT_SECRET || 'secretkey123';
 
-/*
-  POST /api/auth/register
-  Registra un nuevo usuario (solo nombre, email, password, teléfono opcional)
-*/
-async function register(req, res) {
-  const { nombre, email, password, telefono } = req.body;
-  if (!nombre || !email || !password) {
-    return res.status(400).json({ message: 'Nombre, email y contraseña son obligatorios.' });
+async function register(req, res, next) {
+  // Validar payload
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
   }
 
-  // Comprueba si ya existe un usuario con ese email
-  if (await User.findByEmail(email)) {
-    return res.status(409).json({ message: 'Este email ya está registrado.' });
-  }
+  const { nombre, email, password } = req.body;
+  console.log('[REGISTER] email recibido:', email);
 
-  // Crea el usuario en la base de datos
-  await User.createUser({ nombre, email, password, telefono });
-  res.status(201).json({ message: 'Usuario registrado correctamente.' });
+  try {
+    // Chequear duplicado
+    const existing = await User.findByEmail(email);
+    console.log('[REGISTER] findByEmail devolvió:', existing);
+    if (existing) {
+      return res.status(409).json({ message: 'Este email ya está registrado.' });
+    }
+
+    // Hashear pass
+    const salt = await bcrypt.genSalt(10);
+    const hashed = await bcrypt.hash(password, salt);
+
+    // Crear usuario
+    const user = await User.createUser({
+      nombre,
+      email,
+      password: hashed,
+      telefono: null,
+      tipo: 'cliente'
+    });
+    console.log('[REGISTER] usuario creado con id:', user.id);
+
+    // Firmar JWT
+    const payload = { id: user.id, role: user.tipo };
+    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '12h' });
+
+    return res.status(201).json({ token, user });
+  } catch (err) {
+    console.error('[REGISTER] error:', err);
+    next(err);
+  }
 }
 
-/*
-  POST /api/auth/login
-  Permite login con email o nombre de usuario (identifier) + contraseña
-*/
-async function login(req, res) {
+async function login(req, res, next) {
   const { identifier, password } = req.body;
   if (!identifier || !password) {
-    return res.status(400).json({ message: 'Usuario/email y contraseña son obligatorios.' });
+    return res.status(400).json({ message: 'Usuario/email y contraseña obligatorios.' });
   }
 
-  // Intento primero por email
-  let user = await User.findByEmail(identifier);
-  // Si no existe, intento por nombre de usuario
-  if (!user) {
-    user = await User.findByUsername(identifier);
-  }
-  if (!user) {
-    return res.status(401).json({ message: 'Credenciales incorrectas.' });
-  }
-
-  // Verifico la contraseña
-  const valid = await User.verifyPassword(password, user.contraseña);
-  if (!valid) {
-    return res.status(401).json({ message: 'Credenciales incorrectas.' });
-  }
-
-  // Genero un token JWT con id y rol
-  const token = jwt.sign(
-    { userId: user.id, role: user.tipo },
-    JWT_SECRET,
-    { expiresIn: '8h' }
-  );
-
-  res.json({
-    token,
-    user: {
-      id: user.id,
-      nombre: user.nombre,
-      email: user.email,
-      tipo: user.tipo
+  try {
+    let user = await User.findByEmail(identifier);
+    if (!user) user = await User.findByUsername(identifier);
+    if (!user) {
+      return res.status(401).json({ message: 'Credenciales incorrectas.' });
     }
-  });
+
+    const valid = await bcrypt.compare(password, user.password);
+    if (!valid) {
+      return res.status(401).json({ message: 'Credenciales incorrectas.' });
+    }
+
+    const payload = { id: user.id, role: user.tipo };
+    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '12h' });
+
+    return res.json({ token, user });
+  } catch (err) {
+    next(err);
+  }
 }
 
-module.exports = {
-  register,
-  login
-};
+module.exports = { register, login };

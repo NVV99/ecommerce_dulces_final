@@ -1,54 +1,209 @@
-/*           IMPORTS             */
-
 @import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Raleway:wght@300;400;600&display=swap');
 
-
-/*        AJUSTES GLOBALES        */
-
+/* GLOBALES */
 html, body {
-    margin: 0;
-    padding: 0;
-    min-height: 100vh;
-    font-family: 'Source Code Pro', sans-serif;
-    background-color: #fce4ec;
-    color: #212121;
-    display: flex;
-    flex-direction: column;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  font-family: 'Source Code Pro', sans-serif;
+  background-color: #fce4ec;
+  color: #212121;
+  display: flex;
+  flex-direction: column;
 }
 
-
-/*          FUENTES           */
-
-h1, h2 {
-    font-family: 'Pacifico', cursive;
-    text-align: center;
+h1 {
+  font-family: 'Pacifico', cursive;
+  text-align: center;
+  color: #212121;
+  font-size: 2.5rem;
 }
 
-.lead {
-    font-style: italic;
-    font-family: 'Dancing Script', cursive;
-    font-size: 22px;
-    color: #212121;
+h2 {
+  font-family: 'Pacifico', cursive;
+  text-align: center;
+  color: #212121;
+  font-size: 2.5rem;
+}
+
+h3 {
+  font-family: 'Pacifico', cursive;
+  text-align: center;
+  color: #212121;
+  font-size: 2rem;
+}
+
+.text-kawaii-title{
+  font-family: 'Pacifico', cursive;
+  color: #e91e63;
+  text-align: center;
+  font-size: 2.5rem;
+ }
+
+.lead, .custom-subtitle {
+  font-style: italic;
+  font-family: 'Dancing Script', cursive;
+  font-size: 20px;
+  color: #212121;
 }
 
 .custom-welcome-title {
-    font-family: 'Pacifico', cursive;
-    font-size: 2.8rem;
-    color: #333;
-    margin-bottom: 1.5rem;
-    text-align: center;
+  font-size: 3rem;
+  color: #333;
+  margin-bottom: 1.5rem;
+  text-align: center;
 }
 
-.custom-subtitle {
-    font-style: italic;
-    font-family: 'Dancing Script', cursive;
-    font-size: 18px;
-    color: #212121;
-    text-align: justify;
+/*  BOTONES */
+.btn {
+  border-radius: 30px;
+  font-weight: bold;
+  transition: all 0.4s ease-in-out;
+}
+
+.btn-pink {
+  background-color: #000;
+  color: #fff;
+  border: none;
+}
+
+.btn-pink:hover {
+  background-color: #ff85c0;
+}
+
+.btn-gradient {
+  background-color: #000;
+  color: white;
+  border: none;
+}
+
+.btn-gradient:hover {
+  background: linear-gradient(135deg, #e91e63, #ff85c0);
+  box-shadow: 0 4px 8px rgba(233, 30, 99, 0.5);
+}
+
+/* FORMULARIO CONTACTO */
+
+.contact-kawaii-form {
+  background-color: #fff0f5;
+  border: 2px dashed #f8bbd0;
+  border-radius: 1rem;
+  padding: 2rem;
+}
+
+.contact-kawaii-form input,
+.contact-kawaii-form textarea {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.contact-kawaii-form label {
+  font-weight: bold;
+  color: #666;
+}
+
+.contact-kawaii-form .btn-pink {
+  background-color: #000;
+  color: #fff;
+  border: none;
+  transition: all 0.3s ease-in-out;
+}
+
+.contact-kawaii-form .btn-pink:hover {
+  background-color: #ff85c0;
+  transform: translateY(-2px);
+}
+
+/* VIDEO SECCION */
+
+.video-kawaii-section {
+  background-color: #fff0f5;
+  border: 2px dashed #f8bbd0;
+  border-radius: 1rem;
+}
+.video-section h3 {
+  font-size: 2.5rem;
+  font-family: 'Pacifico', cursive;
+  color: #e91e63;
+}
+
+.video-section p {
+  font-family: 'Dancing Script', cursive;
+  font-size: 18px;
+  color: #212121;
+}
+
+/* CHECKOUT */
+
+.checkout-page {
+  background-color: #ffe6f0;
+}
+
+.checkout-title {
+  color: #e91e63;
+  font-family: 'Pacifico', cursive;
+}
+
+.checkout-subtitle {
+  font-weight: 500;
+  color: #333;
+}
+
+.checkout-products-list {
+  background-color: #fff8fb;
+  border: 1px solid #fce4ec;
+}
+
+.checkout-summary {
+  background-color: #fdfdff;
+  border: 1px solid #ddd;
 }
 
 
-/*          NAVBAR               */
+/* CANCEL/SUCCESS PAGE */
+.status-page {
+  background-color: #fff0f5;
+  padding: 4rem 2rem;
+  border-radius: 2rem;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  text-align: center;
+  max-width: 600px;
+  margin: 4rem auto;
+  border: 3px dashed #f8bbd0;
+}
+
+.status-page h1 {
+  color: #e91e63;
+  font-size: 3rem;
+  margin-bottom: 1.5rem;
+}
+
+.status-page p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+.status-page .btn {
+  padding: 0.8rem 2rem;
+  font-size: 1.1rem;
+}
+
+
+/*  RESPONSIVE */
+
+@media (max-width: 768px) {
+  .custom-welcome-title {
+    font-size: 2rem;
+  }
+  h1, h2, h3 {
+    font-size: 2rem;
+  }
+  #contact-form {
+    padding: 1rem;
+  }
+}
+
+
+/* NAVBAR */
 
 .navbar, .footer {
     background-color: #212121;
@@ -86,13 +241,13 @@ h1, h2 {
     color: white;
 }
 
-/*             ICONOS             */
+/* ICONOS */
 
 .nav-link i, .product-animated i {
     margin-right: 5px;
 }
 
-/*             LOGO              */
+/* LOGO */
 
 .logo {
     width: 120px;
@@ -109,7 +264,7 @@ h1, h2 {
 }
 
 
-/*            BOTONES            */
+/* BOTONES */
 
 .btn {
     border-radius: 5px;
@@ -169,8 +324,12 @@ h1, h2 {
   transform: translateY(-3px);
 }
 
+.border-pink {
+  border-color: #f8bbd0 !important;
+}
 
-/*           CAROUSEL            */
+
+/* CAROUSEL */
 
 .carousel-container {
     display: flex;
@@ -199,46 +358,68 @@ h1, h2 {
     to { opacity: 1; transform: scale(1); }
 }
 
-/*       PRODUCTOS DESTACADOS CON SWIPER      */
+/* PRODUCTOS DESTACADOS CON SWIPER */
+
+.swiper {
+  padding: 1rem 0;
+}
 
 .swiper-wrapper {
   overflow: visible !important;
 }
 
 .swiper-slide {
-  position: relative;
+  height: auto;
+  display: flex;
 }
 
-#destacados-container .card {
+.swiper-slide .card {
+  width: 100%;
+  max-width: 300px;
+  min-height: 460px;
+  margin: auto;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
   transition: all 0.3s ease;
-  position: relative;
-  z-index: 1;
 }
 
-#destacados-container .card:hover {
+.swiper-slide .card:hover {
+  transform: translateY(-6px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-  transform: translateY(-5px);
   border-color: #ffb6c1;
 }
 
+/* Contenido adaptable dentro */
+.swiper-slide .card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
 
-/* Responsivo para tablets */
+.card-title {
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+/* RESPONSIVE */
 @media (max-width: 992px) {
-  .multi-product .card {
-    flex: 1 1 calc(50% - 1rem); /* 2 tarjetas en tablets */
+  .swiper-slide .card {
+    max-width: 260px;
   }
 }
 
-/* Responsivo para móviles */
 @media (max-width: 576px) {
-  .multi-product .card {
-    flex: 1 1 100%; /* 1 tarjeta en móviles */
+  .swiper-slide .card {
     max-width: 100%;
   }
 }
 
 
-/*           FOOTER              */
+/*  FOOTER  */
 
 footer {
     margin-top: auto;
@@ -283,23 +464,26 @@ footer p {
 }
 
 
-/*        PRODUCT CARDS          */
+/* PRODUCT CARDS */
 
 #titulo-productos {
     margin-bottom: 50px;
 }
 
 .card {
-    height: auto; /* Elimina cualquier altura fija */
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
+  width: 100%;
+  max-width: 300px;
+  min-height: 460px;
+  margin: auto;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
 }
 
 .card-img-top {
   width: 100%;
-  height: 200px;       /* prueba con 180px o el tamaño que necesites */
-  object-fit: cover;   /* rellena el recuadro recortando lo sobrante */
+  height: 200px;    
+  object-fit: cover; 
   display: block;
 }
 
@@ -382,7 +566,7 @@ footer p {
 }
 
 
-/*             MODAL             */
+/* MODAL */
 
 .modal-content {
     background-color: #fce4ec !important;
@@ -412,7 +596,7 @@ footer p {
 }
 
 
-/*            ABOUT              */
+/* ABOUT */
 
 .about-title {
     margin-bottom: 30px;
@@ -437,41 +621,7 @@ footer p {
 }
 
 
-/*           CONTACT              */
-
-.contact-form {
-    margin-bottom: 40px;
-}
-
-
-/*           CHEKOUT          */
-
-/* Botón degradado para Confirmar Compra y Volver */
-.btn-gradient {
-    background: #000000;
-    border: none;
-    color: white;
-    font-weight: bold;
-    transition: all 0.4s ease-in-out;
-}
-
-.btn-gradient:hover {
-    background: linear-gradient(135deg, #e91e63, #ff85c0);
-}
-
-/* Badge del carrito */
-#cart-count {
-    font-size: 0.75rem;
-    padding: 5px;
-}
-
-/* Resumen de Pedido */
-#cart-summary {
-    font-size: 0.9rem;
-}
-
-
-/*           RESPONSIVE          */
+/* RESPONSIVE */
 
 @media (max-width: 768px) {
     .nav-animated:hover {

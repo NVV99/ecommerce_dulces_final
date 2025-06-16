@@ -67,42 +67,48 @@
     </div>
   </nav>
 
-  <!-- Modal Único Login/Registro -->
-<div class="modal fade" id="authModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Acceder a tu Cuenta</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <ul class="nav nav-tabs" id="authTab" role="tablist">
-                    <li class="nav-item">
-                        <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#loginTab" type="button">Iniciar Sesión</button>
-                    </li>
-                    <li class="nav-item">
-                        <button class="nav-link" id="register-tab" data-bs-toggle="tab" data-bs-target="#registerTab" type="button">Registrarse</button>
-                    </li>
-                </ul>
-                <div class="tab-content mt-3">
-                    <!-- Iniciar Sesión -->
-                    <div class="tab-pane fade show active" id="loginTab">
-                        <input type="text" id="auth-username" class="form-control mb-2" placeholder="Su Correo Electrónico">
-                        <input type="password" id="auth-password" class="form-control mb-2" placeholder="Contraseña">
-                        <button class="btn btn-gradient w-100 mt-2" onclick="login()">Iniciar Sesión</button>
-                    </div>
-                    <!-- Registrarse -->
-                    <div class="tab-pane fade" id="registerTab">
-                        <input type="text" id="register-username" class="form-control mb-2" placeholder="Nombre de Usuario (máx 6 caracteres)">
-                        <input type="email" id="register-email" class="form-control mb-2" placeholder="Correo Electrónico">
-                        <input type="password" id="register-password" class="form-control mb-2" placeholder="Contraseña (mínimo 6 caracteres)">
-                        <input type="password" id="register-password-confirm" class="form-control mb-2" placeholder="Repetir Contraseña">
-                        <button class="btn btn-gradient w-100 mt-2" onclick="registerUser()">Registrarse</button>
-                    </div>
-                </div>
-            </div>
+ <!-- Modal Único Login/Registro -->
+<div class="modal fade" id="authModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Acceder a tu Cuenta</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <ul class="nav nav-tabs" id="authTab" role="tablist">
+          <li class="nav-item">
+            <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#loginTab" type="button">Iniciar Sesión</button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" id="register-tab" data-bs-toggle="tab" data-bs-target="#registerTab" type="button">Registrarse</button>
+          </li>
+        </ul>
+        <div class="tab-content mt-3">
+
+          <!-- Iniciar Sesión -->
+          <div class="tab-pane fade show active" id="loginTab">
+            <form id="login-form" autocomplete="off">
+              <input autocomplete="off" type="email" id="auth-username" class="form-control mb-2" placeholder="Su Correo Electrónico" required>
+              <input autocomplete="off" type="password" id="auth-password" class="form-control mb-2" placeholder="Contraseña" required>
+              <button type="button" class="btn btn-gradient w-100 mt-2" onclick="login()">Iniciar Sesión</button>
+            </form>
+          </div>
+
+          <!-- Registrarse -->
+          <div class="tab-pane fade" id="registerTab">
+            <form id="register-form" autocomplete="new-password">
+              <input autocomplete="off" type="text" id="register-username" class="form-control mb-2" placeholder="Nombre de Usuario (máx 6 caracteres)" maxlength="6" required>
+              <input autocomplete="off" type="email" id="register-email" class="form-control mb-2" placeholder="Correo Electrónico" required>
+              <input autocomplete="off" type="password" id="register-password" class="form-control mb-2" placeholder="Contraseña (mínimo 6 caracteres)" minlength="6" required>
+              <input autocomplete="off" type="password" id="register-password-confirm" class="form-control mb-2" placeholder="Repetir Contraseña" required>
+              <button type="button" class="btn btn-gradient w-100 mt-2" onclick="registerUser()">Registrarse</button>
+            </form>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </div>
 
  <!-- Modal del Carrito -->
@@ -202,7 +208,6 @@
   </div>
 </div>
 
-  <!-- Carrusel -->
   <header class="py-5 bg-pink text-center">
     <h1 class="custom-welcome-title text-center">¡Bienvenido a Sakura Suki!</h1>
     <p class="lead">Descubre los dulces más deliciosos y animados
@@ -210,29 +215,42 @@
     </p>
   </header>
 
-  <div class="carousel-container">
-    <div id="carouselExample" class="carousel slide">
-      <div class="carousel-inner">
-        <div class="carousel-item active">
-          <img src="img/carrusel/HelloKittyBebida.png" class="d-block w-100" alt="Caramelos">
-        </div>
-        <div class="carousel-item">
-          <img src="img/carrusel/carrusel2.png" class="d-block w-100" alt="Chocolate">
-        </div>
+<!-- Carrusel -->
+<div class="carousel-container">
+  <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img src="img/carrusel/banner1.png" class="d-block w-100" alt="Caramelos">
       </div>
-      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon"></span>
-      </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-        <span class="carousel-control-next-icon"></span>
-      </button>
+      <div class="carousel-item">
+        <img src="img/carrusel/banner2.png" class="d-block w-100" alt="Chocolate">
+      </div>
+      <div class="carousel-item">
+        <img src="img/carrusel/banner3.png" class="d-block w-100" alt="Dulces">
+      </div>
+      <div class="carousel-item">
+        <img src="img/carrusel/banner4.png" class="d-block w-100" alt="Bebidas">
+      </div>
+      <div class="carousel-item">
+        <img src="img/carrusel/banner5.png" class="d-block w-100" alt="Snacks">
+      </div>
     </div>
-  </div>
 
-  
+    <!-- Controles -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+      <span class="carousel-control-next-icon"></span>
+    </button>
+  </div>
+</div>
+
 <!-- Productos Destacados -->
 <section class="container my-5">
-  <h2 class="custom-welcome-title mb-5 text-center">Nuestros Productos Destacados</h2>
+  <h2 class="mb-5 text-center" style="margin-top: 4rem;">
+  Nuestros Productos Destacados
+</h2>
   <div class="swiper">
     <div class="swiper-wrapper" id="destacados-container"></div>
     <!-- Flechas de navegación -->
@@ -241,33 +259,94 @@
   </div>
 </section>
 
-
 <!-- Botón Ver Catálogo Completo -->
 <div class="text-center my-5">
   <a href="products.html" class="btn btn-outline-pink btn-lg">
     Ver Catálogo Completo</a>
 </div>
 
-
- <!-- Video Sección -->
-<div class="container mt-5 mb-5">
-  <div class="row align-items-center">
-    <div class="col-md-6 mb-4 mb-md-0">
-      <div class="ratio ratio-16x9">
-        <iframe src="https://www.youtube.com/embed/FQ3FYt_5bDk" title="Video presentación Sakura Suki" allowfullscreen></iframe>
+<!-- Modal ver Producto -->
+<div class="modal fade" id="productModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content p-4">
+      <div class="modal-header">
+        <h5 id="modal-title" class="modal-title"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
-    </div>
-    <div class="col-md-6 mb-4 text-center text-md-start">
-      <h3 class="custom-welcome-title">¿Por qué Sakura Suki Sweet Shop?</h3>
-      <p class="custom-subtitle">
-        Descubre la auténtica dulzura japonesa con nuestra exclusiva selección de snacks, dulces y bebidas.<br>
-        Colaboraciones oficiales, productos de anime y sorpresas kawaii te esperan cada mes..
-      </p>
-      <a href="about.html" class="btn btn-pink mt-3">Descubre Más Sobre Nosotros</a>
+      <div class="modal-body">
+        <div class="row">
+          <!-- Imagen principal + miniaturas -->
+          <div class="col-md-6 text-center">
+            <img id="modal-img" class="img-fluid rounded mb-3" style="max-height: 300px; object-fit: cover;">
+            <div id="modal-images" class="d-flex justify-content-center gap-2"></div>
+          </div>
+
+          <!-- Información -->
+          <div class="col-md-6">
+            <h5 id="modal-price" class="text-danger mb-3"></h5>
+            <p id="modal-description"></p>
+
+            <hr>
+
+            <h6><strong>Bio</strong></h6>
+            <p id="modal-bio" class="small text-muted"></p>
+
+            <h6><strong>Ingredientes</strong></h6>
+            <p id="modal-ingredients" class="small"></p>
+
+            <h6><strong>Valor Calórico</strong></h6>
+            <p id="modal-nutrition" class="small"></p>
+
+            <!-- Botón añadir al carrito -->
+              <div class="d-flex align-items-center mb-2">
+                <button class="btn btn-outline-secondary" onclick="decreaseQuantity()">-</button>
+                <span id="quantity-modal" class="mx-2">1</span>
+                <button class="btn btn-outline-secondary" onclick="increaseQuantity()">+</button>
+              </div>
+            <button class="btn btn-gradient w-100 mt-4" onclick="addToCartFromModal()">Añadir al carrito</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
+<!-- Sección de Video -->
+<div class="container mt-5 mb-5">
+  <div class="row align-items-center video-kawaii-section rounded-4 p-4 shadow-sm">
+    
+    <div class="col-md-6 mb-4 mb-md-0">
+      <div class="ratio ratio-16x9 rounded-3 overflow-hidden shadow-sm border border-2 border-pink">
+      <iframe width="560" height="315"
+        src="https://www.youtube.com/embed/sJ4cuEbtTvU?autoplay=1&mute=1&loop=1&playlist=sJ4cuEbtTvU"
+        title="YouTube video player"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allowfullscreen>
+      </iframe>
+      </div>
+    </div>
+
+    <!-- Texto -->
+    <div class="col-md-6 text-center text-md-start mt-4 mt-md-0">
+      <h3 class="text-kawaii-title text-kawaii">¿Por qué Sakura Suki Sweet Shop?</h3>
+      <p class="custom-subtitle">
+        Descubre la auténtica dulzura japonesa con nuestra exclusiva selección de snacks, dulces y bebidas.<br>
+        Colaboraciones oficiales, productos de anime y sorpresas kawaii te esperan cada mes.
+      </p>
+      <a href="about.html" class="btn btn-pink btn-lg px-4 mt-3 rounded-pill">
+        ✿ Descubre Más Sobre Nosotros ✿
+      </a>
+    </div>
+
+  </div>
+</div>
+
+</div>
+
+  <!-- Footer -->
+  
  <footer class="bg-dark text-white pt-4 pb-2">
   <div class="container text-center">
 
@@ -285,13 +364,12 @@
     <p class="mb-2">contacto@sakurasuki.com | +34 600 123 456</p>
 
     <p class="small">
-      <a href="#" class="text-white mx-2">Términos y Condiciones</a> |
-      <a href="#" class="text-white mx-2">Política de Privacidad</a>
+      <a href="terminos.html" class="text-white mx-2">Términos y Condiciones</a> |
+      <a href="privacidad.html" class="text-white mx-2">Política de Privacidad</a>
     </p>
 
   </div>
 </footer>
-
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

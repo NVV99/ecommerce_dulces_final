@@ -1,24 +1,23 @@
-// src/js/cart.js
+// public/js/cart.js
 
-/** Obtiene el carrito desde sessionStorage (no persiste tras cerrar navegador) */
+/** Obtiene el carrito desde sessionStorage */
 export function getCart() {
   return JSON.parse(sessionStorage.getItem('cart') || '[]');
 }
 
-/** Guarda el carrito en sessionStorage */
+/** Guarda el carrito y refresca badge/modal si existen */
 export function saveCart(cart) {
   sessionStorage.setItem('cart', JSON.stringify(cart));
   updateCartCount();
-  loadCartModal();  // refresca la vista del modal si está abierto
+  loadCartModal();
 }
 
-/** Añade qty al producto; si no existe, lo inserta */
+/** Añade qty al producto, o lo crea */
 export function addToCart(id, name, price, qty = 1) {
   const cart = getCart();
   const item = cart.find(x => x.productId === id);
   if (item) {
     item.quantity += qty;
-    // actualiza nombre/precio por si cambian
     item.name = name;
     item.unitPrice = price;
   } else {
@@ -27,19 +26,19 @@ export function addToCart(id, name, price, qty = 1) {
   saveCart(cart);
 }
 
-/** Elimina completamente un producto del carrito */
+/** Quita un producto */
 export function removeFromCart(id) {
   const cart = getCart().filter(x => x.productId !== id);
   saveCart(cart);
 }
-window.removeFromCart = removeFromCart;  // expuesto para onclick
+window.removeFromCart = removeFromCart;
 
 /** Vacía todo el carrito */
 export function clearCart() {
   saveCart([]);
 }
 
-/** Calcula el total de unidades en el carrito */
+/** Cuenta total de unidades */
 export function getCartCount() {
   return getCart().reduce((sum, x) => sum + x.quantity, 0);
 }
@@ -52,12 +51,13 @@ export function updateCartCount() {
   });
 }
 
-/** Rellena la tabla del modal con las filas del carrito */
+/** Rellena el modal del carrito si existe */
 export function loadCartModal() {
-  const cart = getCart();
   const body = document.getElementById('cart-items');
+  if (!body) return;           // evita error en páginas sin modal
   const totalEl = document.getElementById('cart-total');
 
+  const cart = getCart();
   body.innerHTML = cart.map(i => `
     <tr>
       <td>${i.name}</td>
@@ -73,13 +73,13 @@ export function loadCartModal() {
   totalEl.textContent = total.toFixed(2);
 }
 
-/** Al hacer checkout, redirige a la página de pago */
+/** Redirige a checkout.html */
 export function checkout() {
   window.location.href = 'checkout.html';
 }
 window.checkout = checkout;
 
-// Inicialización al cargar la página:
+/** Al cargar la página, actualiza badge y modal */
 document.addEventListener('DOMContentLoaded', () => {
   updateCartCount();
   loadCartModal();

@@ -1,12 +1,12 @@
-// frontend/js/auth.js
 import { apiFetch } from './api.js';
 
 window.registerUser = async function() {
-  const nombre    = document.getElementById("register-username").value.trim();
-  const email     = document.getElementById("register-email").value.trim();
-  const password  = document.getElementById("register-password").value.trim();
-  const confirm   = document.getElementById("register-password-confirm").value.trim();
+  const nombre   = document.getElementById("register-username").value.trim();
+  const email    = document.getElementById("register-email").value.trim();
+  const password = document.getElementById("register-password").value.trim();
+  const confirm  = document.getElementById("register-password-confirm").value.trim();
 
+  // Validaciones cliente
   if (!nombre || nombre.length > 6) {
     return alert("El nombre de usuario debe tener como máximo 6 caracteres.");
   }
@@ -20,15 +20,37 @@ window.registerUser = async function() {
     return alert("Las contraseñas no coinciden.");
   }
 
+  // Llamada al backend
   const resp = await apiFetch('/auth/register', {
     method: 'POST',
-    body: JSON.stringify({ nombre, email, password, telefono: "" })
+    body: JSON.stringify({ nombre, email, password })
   });
-  alert(resp.message || resp.error || 'Error en registro');
-  if (resp.message) {
-    document.getElementById('login-tab').click();
-    document.getElementById("register-form").reset();
+  console.log('RESP FRONT register:', resp);
+
+  if (resp.token) {
+    // Guardamos token y datos mínimos de user
+    const safeUser = {
+      id: resp.user.id,
+      nombre: resp.user.nombre,
+      email: resp.user.email,
+      tipo: resp.user.tipo
+    };
+    localStorage.setItem('token', resp.token);
+    localStorage.setItem('user', JSON.stringify(safeUser));
+
+    // Cerramos modal y actualizamos UI
+    bootstrap.Modal.getInstance(document.getElementById("authModal")).hide();
+    updateUserDisplay();
+    return;
   }
+
+  // Mostrar errores de validación
+  if (Array.isArray(resp.errors)) {
+    return alert(resp.errors.map(e => e.msg).join('\n'));
+  }
+
+  // Mensaje genérico
+  alert(resp.message || 'Error en registro');
 };
 
 window.login = async function() {
@@ -43,6 +65,7 @@ window.login = async function() {
     method: 'POST',
     body: JSON.stringify({ identifier, password })
   });
+  console.log('RESP FRONT login:', resp);
 
   if (resp.token) {
     localStorage.setItem('token', resp.token);
@@ -64,6 +87,7 @@ window.updateUserDisplay = function() {
   const container = document.getElementById("user-dropdown-container");
   const user = JSON.parse(localStorage.getItem('user'));
   container.innerHTML = "";
+
   if (user) {
     container.innerHTML = `
       <div class="dropdown">
@@ -86,14 +110,7 @@ window.updateUserDisplay = function() {
   }
 };
 
-window.showHistory = function() {
-  import('./history.js').then(m => m.showHistory());
-};
+window.showHistory = () => import('./history.js').then(m => m.showHistory());
+window.showOrders  = () => import('./orders.js').then(m => m.showOrders());
 
-window.showOrders = function() {
-  import('./orders.js').then(m => m.showOrders());
-};
-
-document.addEventListener("DOMContentLoaded", () => {
-  updateUserDisplay();
-});
+document.addEventListener("DOMContentLoaded", updateUserDisplay);
