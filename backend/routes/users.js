@@ -1,10 +1,21 @@
 const express = require('express');
-const authMiddleware = require('../middlewares/authMiddleware');
+const {
+  getAllUsers,
+  getUserProfile,
+  updateUser,
+  deleteUser
+} = require('../controllers/userController');
+const auth = require('../middlewares/authMiddleware');
+const isAdmin = require('../middlewares/isAdmin');
+
 const router = express.Router();
 
-// GET /api/users/me
-router.get('/me', authMiddleware, (req, res) => {
-  res.json({ user: req.user });
-});
+// Perfil propio
+router.get('/me', auth, getUserProfile);
+router.put('/me', auth, updateUser);
+
+// ADMINs
+router.get('/', auth, isAdmin, getAllUsers);
+router.delete('/:id', auth, isAdmin, deleteUser);
 
 module.exports = router;

@@ -1,14 +1,19 @@
 require('dotenv').config();
 const express = require('express');
-const cors    = require('cors');
-const path    = require('path');
-const db      = require('./config/db');
+const cors = require('cors');
+const path = require('path');
+const db = require('./config/db');
 const errorHandler = require('./middlewares/errorMiddleware');
 
 const app = express();
 
-// Middlewares
+// Middleware general
 app.use(cors());
+
+// Ruta del webhook debe ir antes de express.json() para que pueda leer el raw body
+app.post('/api/webhook', express.raw({ type: 'application/json' }), require('./routes/webhook'));
+
+// Luego los demás middlewares
 app.use(express.json());
 
 // Rutas API
@@ -37,5 +42,6 @@ app.use(express.static(path.join(__dirname, '../public')));
 // Error handler
 app.use(errorHandler);
 
+// Servidor
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Servidor en http://localhost:${PORT}`));

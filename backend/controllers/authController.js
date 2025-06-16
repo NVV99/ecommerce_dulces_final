@@ -5,39 +5,37 @@ const User = require('../models/user');
 const JWT_SECRET = process.env.JWT_SECRET || 'secretkey123';
 
 async function register(req, res, next) {
-  // Validar payload
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { nombre, email, password } = req.body;
+  const { nombre, email, password, tipo } = req.body;
   console.log('[REGISTER] email recibido:', email);
 
   try {
-    // Chequear duplicado
     const existing = await User.findByEmail(email);
     console.log('[REGISTER] findByEmail devolvió:', existing);
     if (existing) {
       return res.status(409).json({ message: 'Este email ya está registrado.' });
     }
 
-    // Hashear pass
     const salt = await bcrypt.genSalt(10);
     const hashed = await bcrypt.hash(password, salt);
 
-    // Crear usuario
+    // Acepta tipo "admin" si se recibe, por defecto "cliente"
+    const tipoFinal = tipo === 'admin' ? 'admin' : 'cliente';
+
     const user = await User.createUser({
       nombre,
       email,
       password: hashed,
       telefono: null,
-      tipo: 'cliente'
+      tipo: tipoFinal
     });
     console.log('[REGISTER] usuario creado con id:', user.id);
 
-    // Firmar JWT
-    const payload = { id: user.id, role: user.tipo };
+    const payload = { id: user.id, tipo: user.tipo };
     const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '12h' });
 
     return res.status(201).json({ token, user });
@@ -65,7 +63,7 @@ async function login(req, res, next) {
       return res.status(401).json({ message: 'Credenciales incorrectas.' });
     }
 
-    const payload = { id: user.id, role: user.tipo };
+    const payload = { id: user.id, tipo: user.tipo };
     const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '12h' });
 
     return res.json({ token, user });

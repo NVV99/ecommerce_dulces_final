@@ -1,10 +1,10 @@
 import { apiFetch } from './api.js';
 
-window.registerUser = async function() {
-  const nombre   = document.getElementById("register-username").value.trim();
-  const email    = document.getElementById("register-email").value.trim();
+window.registerUser = async function () {
+  const nombre = document.getElementById("register-username").value.trim();
+  const email = document.getElementById("register-email").value.trim();
   const password = document.getElementById("register-password").value.trim();
-  const confirm  = document.getElementById("register-password-confirm").value.trim();
+  const confirm = document.getElementById("register-password-confirm").value.trim();
 
   // Validaciones cliente
   if (!nombre || nombre.length > 6) {
@@ -20,15 +20,14 @@ window.registerUser = async function() {
     return alert("Las contraseñas no coinciden.");
   }
 
-  // Llamada al backend
   const resp = await apiFetch('/auth/register', {
     method: 'POST',
     body: JSON.stringify({ nombre, email, password })
   });
+
   console.log('RESP FRONT register:', resp);
 
   if (resp.token) {
-    // Guardamos token y datos mínimos de user
     const safeUser = {
       id: resp.user.id,
       nombre: resp.user.nombre,
@@ -38,24 +37,21 @@ window.registerUser = async function() {
     localStorage.setItem('token', resp.token);
     localStorage.setItem('user', JSON.stringify(safeUser));
 
-    // Cerramos modal y actualizamos UI
     bootstrap.Modal.getInstance(document.getElementById("authModal")).hide();
     updateUserDisplay();
     return;
   }
 
-  // Mostrar errores de validación
   if (Array.isArray(resp.errors)) {
     return alert(resp.errors.map(e => e.msg).join('\n'));
   }
 
-  // Mensaje genérico
   alert(resp.message || 'Error en registro');
 };
 
-window.login = async function() {
+window.login = async function () {
   const identifier = document.getElementById("auth-username").value.trim();
-  const password   = document.getElementById("auth-password").value.trim();
+  const password = document.getElementById("auth-password").value.trim();
 
   if (!identifier || !password) {
     return alert("Usuario/email y contraseña obligatorios.");
@@ -65,6 +61,7 @@ window.login = async function() {
     method: 'POST',
     body: JSON.stringify({ identifier, password })
   });
+
   console.log('RESP FRONT login:', resp);
 
   if (resp.token) {
@@ -77,7 +74,7 @@ window.login = async function() {
   }
 };
 
-window.logout = function() {
+window.logout = function () {
   localStorage.removeItem('token');
   localStorage.removeItem('user');
   updateUserDisplay();
@@ -89,6 +86,7 @@ window.updateUserDisplay = function() {
   container.innerHTML = "";
 
   if (user) {
+    const isAdmin = user.tipo === 'admin';
     container.innerHTML = `
       <div class="dropdown">
         <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
@@ -98,6 +96,7 @@ window.updateUserDisplay = function() {
           <li><button class="dropdown-item" onclick="showAccount()">Configurar Cuenta</button></li>
           <li><button class="dropdown-item" onclick="showOrders()">Mis Pedidos</button></li>
           <li><button class="dropdown-item" onclick="showHistory()">Historial</button></li>
+          ${isAdmin ? `<li><button class="dropdown-item text-warning" onclick="showAdmin()">Panel de Administración</button></li>` : ''}
           <li><hr class="dropdown-divider"></li>
           <li><button class="dropdown-item text-danger" onclick="logout()">Cerrar Sesión</button></li>
         </ul>
@@ -110,7 +109,12 @@ window.updateUserDisplay = function() {
   }
 };
 
-window.showHistory = () => import('./history.js').then(m => m.showHistory());
-window.showOrders  = () => import('./orders.js').then(m => m.showOrders());
+window.showAdmin = () => {
+  const modal = new bootstrap.Modal(document.getElementById("adminModal"));
+  modal.show();
+};
+
+window.showHistory = () => window.location.href = 'history.html';
+window.showOrders = () => import('./orders.js').then(m => m.showOrders());
 
 document.addEventListener("DOMContentLoaded", updateUserDisplay);

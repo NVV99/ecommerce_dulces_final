@@ -1,48 +1,53 @@
 const db = require('../config/db');
 
 // Perfil de usuario
-exports.getUserProfile = (req, res, next) => {
+exports.getUserProfile = async (req, res, next) => {
   const userId = req.user.id;
-  db.query(
-    'SELECT id, nombre, email, telefono, tipo, fecha_registro FROM usuarios WHERE id = ?',
-    [userId],
-    (err, results) => {
-      if (err) return next(err);
-      res.json(results[0]);
-    }
-  );
+  try {
+    const [results] = await db.query(
+      'SELECT id, nombre, email, telefono, tipo, fecha_registro FROM usuarios WHERE id = ?',
+      [userId]
+    );
+    res.json(results[0]);
+  } catch (err) {
+    next(err);
+  }
 };
 
 // Editar perfil
-exports.updateUser = (req, res, next) => {
+exports.updateUser = async (req, res, next) => {
   const userId = req.user.id;
   const { nombre, telefono } = req.body;
-  db.query(
-    'UPDATE usuarios SET nombre = ?, telefono = ? WHERE id = ?',
-    [nombre, telefono, userId],
-    err => {
-      if (err) return next(err);
-      res.json({ msg: 'Perfil actualizado' });
-    }
-  );
+  try {
+    await db.query(
+      'UPDATE usuarios SET nombre = ?, telefono = ? WHERE id = ?',
+      [nombre, telefono, userId]
+    );
+    res.json({ msg: 'Perfil actualizado' });
+  } catch (err) {
+    next(err);
+  }
 };
 
 // Listar todos los usuarios (admin)
-exports.getAllUsers = (req, res, next) => {
-  db.query(
-    'SELECT id, nombre, email, tipo, fecha_registro FROM usuarios',
-    (err, results) => {
-      if (err) return next(err);
-      res.json(results);
-    }
-  );
+exports.getAllUsers = async (req, res, next) => {
+  try {
+    const [results] = await db.query(
+      'SELECT id, nombre, email, tipo, fecha_registro FROM usuarios'
+    );
+    res.json(results);
+  } catch (err) {
+    next(err);
+  }
 };
 
 // Eliminar usuario (admin)
-exports.deleteUser = (req, res, next) => {
+exports.deleteUser = async (req, res, next) => {
   const { id } = req.params;
-  db.query('DELETE FROM usuarios WHERE id = ?', [id], err => {
-    if (err) return next(err);
+  try {
+    await db.query('DELETE FROM usuarios WHERE id = ?', [id]);
     res.json({ msg: 'Usuario eliminado' });
-  });
+  } catch (err) {
+    next(err);
+  }
 };

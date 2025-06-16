@@ -1,17 +1,16 @@
 const jwt = require('jsonwebtoken');
-const JWT_SECRET = process.env.JWT_SECRET || 'secretkey123';
 
 module.exports = (req, res, next) => {
-  const auth = req.headers.authorization;
-  if (!auth || !auth.startsWith('Bearer ')) {
-    return res.status(401).json({ message: 'No autorizado' });
-  }
-  const token = auth.split(' ')[1];
   try {
-    const payload = jwt.verify(token, JWT_SECRET);
-    req.user = { id: payload.id, tipo: payload.role };
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ message: 'No autorizado' });
+    }
+    const token = authHeader.split(' ')[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = { id: decoded.id, tipo: decoded.tipo };
     next();
   } catch {
-    return res.status(401).json({ message: 'Token inválido' });
+    res.status(401).json({ message: 'Token inválido' });
   }
 };

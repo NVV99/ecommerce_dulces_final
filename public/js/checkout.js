@@ -7,7 +7,6 @@ const stripe = Stripe('pk_test_51RZkkvPtWxkMlM4xxOQ0gVhrKwsPPt8n7GKv8RSi5kb5FeqK
 // Renderiza los productos en el checkout
 function renderProducts() {
   const cart = getCart();
-  console.log('Carrito recuperado:', cart);
   const ul = document.getElementById('checkout-products-list');
   if (!ul || !cart || cart.length === 0) return;
 
@@ -41,39 +40,45 @@ async function handlePayment() {
   const city     = document.getElementById('city').value.trim();
   const zip      = document.getElementById('zip').value.trim();
   const phone    = document.getElementById('phone').value.trim();
+
   if (!fullName || !address || !city || !zip || !phone) {
     return alert('Completa todos los datos de envío.');
   }
 
-  const itemsForOrder = cart.map(item => ({
-    name: item.name,
-    quantity: item.quantity,
-    unitPrice: item.unitPrice
-  }));
+  const total = cart.reduce((sum, item) => sum + (item.unitPrice * item.quantity), 0);
 
-  const total = itemsForOrder.reduce((sum, i) => sum + i.unitPrice * i.quantity, 0);
-
-  const orderResp = await apiFetch('/orders', {
+  const orderResp = await apiFetch('/checkout/finalize', {
     method: 'POST',
-    body: JSON.stringify({ fullName, address, city, zip, phone, total, items: itemsForOrder })
+    body: {
+      fullName,
+      address,
+      city,
+      zip,
+      phone,
+      total,
+      cartItems: cart
+    }
   });
 
   if (!orderResp.orderId) {
-    return alert(orderResp.message || 'Error al crear el pedido');
+    return alert(orderResp.message || 'Error al registrar el pedido');
   }
 
   const lineItems = cart.map(item => ({
     price_data: {
       currency: 'eur',
       product_data: { name: item.name },
-      unit_amount: Math.round(parseFloat(item.unitPrice) * 100),
+      unit_amount: Math.round(item.unitPrice * 100),
     },
     quantity: item.quantity
   }));
 
   const checkoutResp = await apiFetch('/checkout/create-checkout-session', {
     method: 'POST',
-    body: JSON.stringify({ orderId: orderResp.orderId, items: lineItems })
+    body: {
+      orderId: orderResp.orderId,
+      items: lineItems
+    }
   });
 
   if (!checkoutResp.sessionId) {

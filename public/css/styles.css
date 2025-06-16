@@ -113,6 +113,38 @@ h3 {
   transform: translateY(-2px);
 }
 
+/* ALERTA FORMULARIO */
+.alert-success {
+  background-color: #d6f5e7;
+  color: #2e8b57;
+  border: 2px dashed #6ce2a6;
+  border-radius: 12px;
+  margin-top: 1rem;
+}
+
+.alert-danger {
+  background-color: #ffd6dd;
+  color: #c2185b;
+  border: 2px dashed #f782b4;
+  border-radius: 12px;
+}
+
+.spinner-border {
+  color: #ff69b4 !important;
+}
+
+#contact-status {
+  opacity: 0;
+  transition: opacity 1.5s ease, transform 1.3s ease;
+  transform: translateY(10px);
+}
+
+#contact-status.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
 /* VIDEO SECCION */
 
 .video-kawaii-section {
@@ -262,7 +294,6 @@ h3 {
     from { transform: translateY(0); }
     to { transform: translateY(-15px); }
 }
-
 
 /* BOTONES */
 
@@ -463,6 +494,9 @@ footer p {
     color: #ff85c0;
 }
 
+.footer-divider {
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
 
 /* PRODUCT CARDS */
 
@@ -563,6 +597,12 @@ footer p {
 .card .btn-outline-secondary:hover {
     background-color: #f9c1d4;
     color: black;
+}
+
+/* FILTRO PRODUCTOS */
+
+#filter-form {
+  background-color: #ffe4ed !important;
 }
 
 

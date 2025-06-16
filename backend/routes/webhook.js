@@ -1,38 +1,47 @@
 const express = require('express');
-const router  = express.Router();
-const stripe  = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const Order   = require('../models/orders');
+const router = express.Router();
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
-router.post('/', express.raw({ type: 'application/json' }), async (req, res) => {
+// Para firmar correctamente
+const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+// Base de datos
+const db = require('../config/db');
+
+router.post('/', async (req, res) => {
   const sig = req.headers['stripe-signature'];
   let event;
+
   try {
-    event = stripe.webhooks.constructEvent(
-      req.body,
-      sig,
-      process.env.STRIPE_WEBHOOK_SECRET
-    );
+    event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
   } catch (err) {
-    console.error('Webhook error:', err.message);
+    console.error('[Webhook signature error]', err.message);
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
+  // Evento específico: pago completado
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
-    try {
-      const orderId = session.metadata?.orderId || session.metadata?.order_id || session.client_reference_id;
-      if (orderId) {
-        await Order.updateOrderStatus(orderId, 'pagado');
-      } else {
-        console.warn('Order ID not found in session metadata');
-      }
-    } catch (err) {
-      console.error('Failed to update order status:', err);
-    }
-    console.log('Pago confirmado para session:', session.id);
-  }
 
-  res.status(200).end();
+    const pedidoId = session.metadata?.pedidoId;
+
+    if (!pedidoId) {
+      console.warn('[Webhook] No se proporcionó pedidoId');
+      return res.status(400).json({ message: 'Falta pedidoId en metadata' });
+    }
+
+    try {
+      await db.query('UPDATE pedidos SET estado = ? WHERE id = ?', ['pagado', pedidoId]);
+      console.log(`[Webhook] Pedido ${pedidoId} marcado como pagado.`);
+      res.status(200).json({ received: true });
+    } catch (error) {
+      console.error('[Webhook DB error]', error);
+      res.status(500).json({ error: 'Error al actualizar pedido' });
+    }
+  } else {
+    // Evento no manejado
+    res.status(200).json({ received: true });
+  }
 });
 
 module.exports = router;

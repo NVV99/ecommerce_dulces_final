@@ -1,23 +1,20 @@
 import { apiFetch } from './api.js';
 
-window.showHistory = async function() {
-  const modalEl   = document.getElementById("historyModal");
-  const modal     = new bootstrap.Modal(modalEl);
+document.addEventListener('DOMContentLoaded', async () => {
   const container = document.getElementById("history-body");
-
   container.innerHTML = '<p>Cargando historial...</p>';
+
   try {
-    // Llamada a tu API: GET /api/orders
-    const orders = await apiFetch('/orders');
+    const orders = await apiFetch('/orders/mine');
+
     if (!orders.length) {
       container.innerHTML = '<p>Tu historial está vacío.</p>';
     } else {
-      // Construyo una tabla con los pedidos
       container.innerHTML = `
-        <table class="table">
-          <thead>
+        <table class="table table-bordered">
+          <thead class="table-dark">
             <tr>
-              <th>Pedido</th>
+              <th>ID</th>
               <th>Fecha</th>
               <th>Total</th>
               <th>Estado</th>
@@ -37,10 +34,7 @@ window.showHistory = async function() {
       `;
     }
   } catch (err) {
-    console.error('Error cargando historial:', err);
+    console.error('[history.js]', err);
     container.innerHTML = '<p class="text-danger">Error al cargar el historial.</p>';
   }
-
-  modal.show();
-};
-
+});

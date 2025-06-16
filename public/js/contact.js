@@ -1,33 +1,57 @@
-// public/js/contact.js
 import { apiFetch } from './api.js';
 
 const form = document.getElementById('contact-form');
-form.addEventListener('submit', async e => {
+const button = form.querySelector('button[type="submit"]');
+const statusDiv = document.getElementById('contact-status');
+
+form.addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  const data = {
-    nombre:  form.nombre.value.trim(),
-    email:   form.email.value.trim(),
-    mensaje: form.mensaje.value.trim()
-  };
+  const formData = new FormData(form);
+  const data = Object.fromEntries(formData.entries());
 
   if (!data.nombre || !data.email || !data.mensaje) {
-    return alert('Por favor, rellena todos los campos.');
+    showStatus('Por favor, rellena todos los campos.', 'danger');
+    return;
   }
 
   try {
-    const res = await apiFetch('/contact', {
+    button.disabled = true;
+    button.innerHTML = `<span class="spinner-border spinner-border-sm" role="status"></span> Enviando...`;
+
+    const result = await apiFetch('/contact', {
       method: 'POST',
-      body: data
+      body: JSON.stringify(data)
     });
-    if (res.ok) {
-      alert(res.message || 'Mensaje enviado correctamente.');
+
+    if (result.ok) {
+      showStatus('Tu mensaje ha sido enviado correctamente.', 'success');
       form.reset();
     } else {
-      alert(res.message || 'Error enviando el mensaje.');
+      showStatus(result.message || 'Error al enviar el mensaje.', 'danger');
     }
   } catch (err) {
     console.error(err);
-    alert('Error de red al enviar el mensaje.');
+    showStatus('Error al conectar con el servidor.', 'danger');
+  } finally {
+    button.disabled = false;
+    button.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Enviar Mensaje`;
   }
 });
+
+function showStatus(msg, type = 'info') {
+  statusDiv.textContent = msg;
+  statusDiv.className = `alert alert-${type}`;
+  statusDiv.classList.add('show');
+
+  // Mostrar div (por si estuviera en display: none)
+  statusDiv.style.display = 'block';
+
+  // Ocultar con animación después de 5 segundos
+  setTimeout(() => {
+    statusDiv.classList.remove('show');
+    setTimeout(() => {
+      statusDiv.style.display = 'none';
+    }, 500); // Espera a que termine la animación
+  }, 5000);
+}
