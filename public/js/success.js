@@ -13,8 +13,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
-  // No enviamos userId porque tu backend no lo usa
-  // Adaptamos carrito para enviar los campos que tu backend espera (name, quantity, unitPrice)
   const cartItems = rawCart.map(item => ({
     name: item.name,
     quantity: item.quantity,
@@ -23,9 +21,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const total = rawCart.reduce((acc, item) => acc + item.unitPrice * item.quantity, 0);
 
-  // Como no tienes usuario, también deberías tener estos datos en localStorage o en otro lugar para enviar
-  // Si no, se pueden enviar vacíos o default
-  // Aquí ejemplo con datos vacíos para que el backend no falle
   const fullName = localStorage.getItem('fullName') || 'Cliente';
   const address = localStorage.getItem('address') || 'Dirección no disponible';
   const city = localStorage.getItem('city') || 'Ciudad no disponible';

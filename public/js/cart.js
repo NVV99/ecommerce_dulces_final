@@ -1,6 +1,3 @@
-// public/js/cart.js
-
-/** Obtiene el carrito desde sessionStorage */
 export function getCart() {
   return JSON.parse(sessionStorage.getItem('cart') || '[]');
 }
