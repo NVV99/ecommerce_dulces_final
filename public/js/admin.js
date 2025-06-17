@@ -1,6 +1,6 @@
 import { apiFetch } from './api.js';
 
-// Cargar panel de administración al abrir el modal
+// Carga panel de administración al abrir el modal
 window.addEventListener('DOMContentLoaded', () => {
   const modalEl = document.getElementById('adminModal');
   if (!modalEl) return;
@@ -11,7 +11,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// Cargar usuarios
+// Carga usuarios
 async function loadAdminUsers() {
   const container = document.getElementById('admin-users');
   if (!container) return;
@@ -44,7 +44,7 @@ async function loadAdminUsers() {
   }
 }
 
-// Cargar pedidos
+// Carga pedidos
 async function loadAdminOrders() {
   const container = document.getElementById('admin-orders');
   if (!container) return;
@@ -90,7 +90,7 @@ async function loadAdminOrders() {
   }
 }
 
-// Cambiar estado del pedido
+// Cambia estado del pedido
 window.updateOrderStatus = async function (orderId, estado) {
   if (!confirm(`¿Confirmas cambiar el estado a "${estado}"?`)) return;
   try {
@@ -102,7 +102,7 @@ window.updateOrderStatus = async function (orderId, estado) {
       }
     });
     alert(resp.message || 'Estado actualizado');
-    loadAdminOrders(); // refrescar
+    loadAdminOrders(); // refresca
   } catch (err) {
     console.error('[Update Estado Error]', err);
     alert('Error al actualizar estado');

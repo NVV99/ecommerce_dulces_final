@@ -24,13 +24,13 @@ router.post('/', async (req, res, next) => {
   }
 
   try {
-    // 1) Guarda en la DB
+    // Guarda en la DB
     await Contact.createMessage({ userId, nombre, email, mensaje });
   } catch (dbErr) {
     return next(dbErr);
   }
 
-  // 2) Envía email sin bloquear la respuesta
+  // Envía email sin bloquear la respuesta
   (async () => {
     try {
       await transporter.sendMail({
@@ -47,7 +47,7 @@ router.post('/', async (req, res, next) => {
     }
   })();
 
-  // 3) Responde inmediatamente
+  // Responde inmediatamente
   res.status(201).json({ ok:true, message:'Mensaje recibido. ¡Gracias!' });
 });
 

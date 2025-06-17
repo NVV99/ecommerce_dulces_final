@@ -10,10 +10,10 @@ const app = express();
 // Middleware general
 app.use(cors());
 
-// Ruta del webhook debe ir antes de express.json() para que pueda leer el raw body
+// Ruta del webhook
 app.post('/api/webhook', express.raw({ type: 'application/json' }), require('./routes/webhook'));
 
-// Luego los demás middlewares
+// middlewares
 app.use(express.json());
 
 // Rutas API

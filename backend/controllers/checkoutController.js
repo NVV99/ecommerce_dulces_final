@@ -2,34 +2,64 @@ const db = require('../config/db');
 
 exports.finalizeOrder = async (req, res) => {
   try {
-    const { fullName, address, city, zip, phone, total, cartItems } = req.body;
-
+    const usuarioId = req.user.id;
+    const { address, city, zip, country, cartItems } = req.body;
     if (
-      !fullName || !address || !city || !zip || !phone ||
-      !cartItems || !Array.isArray(cartItems) || cartItems.length === 0
+      !address || !city || !zip || !country ||
+      !Array.isArray(cartItems) || cartItems.length === 0
     ) {
       return res.status(400).json({ message: 'Datos del pedido inválidos.' });
     }
 
-    const [orderResult] = await db.query(
-      'INSERT INTO pedidos (nombre_completo, direccion, ciudad, cp, telefono, total, fecha, estado) VALUES (?, ?, ?, ?, ?, ?, NOW(), ?)',
-      [fullName, address, city, zip, phone, total, 'pendiente']
+    // Inserta la dirección
+    const [dirResult] = await db.query(
+      `INSERT INTO direcciones_envio
+         (usuario_id, calle, ciudad, codigo_postal, pais)
+       VALUES (?, ?, ?, ?, ?)`,
+      [usuarioId, address, city, zip, country]
+    );
+    const direccionEnvioId = dirResult.insertId;
+
+    // Calcula total
+    const total = cartItems.reduce(
+      (sum, item) => sum + item.unitPrice * item.quantity,
+      0
     );
 
+    // Inserta el pedido
+    const [orderResult] = await db.query(
+      `INSERT INTO pedidos
+         (usuario_id, direccion_envio_id, total, estado)
+       VALUES (?, ?, ?, 'pendiente')`,
+      [usuarioId, direccionEnvioId, total]
+    );
     const orderId = orderResult.insertId;
 
-    const insertPromises = cartItems.map(item =>
-      db.query(
-        'INSERT INTO pedido_productos (pedido_id, nombre_producto, cantidad, precio_unitario) VALUES (?, ?, ?, ?)',
-        [orderId, item.name, item.quantity, item.unitPrice]
-      )
-    );
+    // Inserta detalles resolviendo el nombre al ID numérico
+    for (const item of cartItems) {
+      const [rows] = await db.query(
+        `SELECT id FROM productos WHERE nombre = ?`,
+        [item.name]
+      );
+      if (rows.length === 0) {
+        throw new Error(`Producto no encontrado: ${item.name}`);
+      }
+      const productoId = rows[0].id;
 
-    await Promise.all(insertPromises);
+      await db.query(
+        `INSERT INTO detalles_pedido
+           (pedido_id, producto_id, cantidad, precio_unitario)
+         VALUES (?, ?, ?, ?)`,
+        [orderId, productoId, item.quantity, item.unitPrice]
+      );
+    }
 
-    res.status(201).json({ message: 'Pedido registrado correctamente.', orderId });
+    return res.status(201).json({
+      orderId,
+      message: 'Pedido registrado correctamente.'
+    });
   } catch (err) {
     console.error('[Error al finalizar pedido]', err);
-    res.status(500).json({ message: 'Error al registrar el pedido.' });
+    return res.status(500).json({ message: err.message });
   }
 };

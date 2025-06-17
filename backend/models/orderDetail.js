@@ -2,7 +2,7 @@
 
 const db = require('../config/db');
 
-// Inserto todos los detalles (items) de un pedido
+// Inserta todos los detalles (items) de un pedido
 async function addOrderDetails(orderId, items) {
     const values = items.map(item => [
         orderId,
@@ -18,7 +18,7 @@ async function addOrderDetails(orderId, items) {
     );
 }
 
-// Obtengo los detalles de un pedido concreto
+// Obtiene los detalles de un pedido concreto
 async function getDetailsByOrder(orderId) {
     const [rows] = await db.query(
         `SELECT dp.*, p.nombre, p.imagen

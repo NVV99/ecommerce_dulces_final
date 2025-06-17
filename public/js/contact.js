@@ -44,10 +44,10 @@ function showStatus(msg, type = 'info') {
   statusDiv.className = `alert alert-${type}`;
   statusDiv.classList.add('show');
 
-  // Mostrar div (por si estuviera en display: none)
+  // Muestra div
   statusDiv.style.display = 'block';
 
-  // Ocultar con animación después de 5 segundos
+  // Oculta con animación después de 5 segundos
   setTimeout(() => {
     statusDiv.classList.remove('show');
     setTimeout(() => {

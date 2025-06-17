@@ -8,13 +8,13 @@ async function getAllCategories() {
     return rows;
 }
 
-// Obtengo una categoría por ID
+// Obtiene una categoría por ID
 async function getCategoryById(id) {
     const [rows] = await db.query('SELECT * FROM categorias WHERE id = ?', [id]);
     return rows[0];
 }
 
-// Creo una nueva categoría
+// Crea una nueva categoría
 async function createCategory({ nombre, descripcion }) {
     await db.query(
         'INSERT INTO categorias (nombre, descripcion) VALUES (?, ?)',
@@ -22,7 +22,7 @@ async function createCategory({ nombre, descripcion }) {
     );
 }
 
-// Actualizo una categoría
+// Actualiza una categoría
 async function updateCategory(id, { nombre, descripcion }) {
     await db.query(
         'UPDATE categorias SET nombre = ?, descripcion = ? WHERE id = ?',
@@ -30,7 +30,7 @@ async function updateCategory(id, { nombre, descripcion }) {
     );
 }
 
-// Elimino una categoría
+// Elimina una categoría
 async function deleteCategory(id) {
     await db.query('DELETE FROM categorias WHERE id = ?', [id]);
 }

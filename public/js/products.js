@@ -51,7 +51,7 @@ function renderProductList(productos) {
   );
 }
 
-// ✅ NUEVA lóg​ica de filtrado (precio ≤ 0 = sin límite)
+// filtrado precio ≤ 0 = sin límite
 function aplicarFiltros() {
   const name = document.getElementById('filter-name')?.value.toLowerCase().trim();
   const category = document.getElementById('filter-category')?.value;

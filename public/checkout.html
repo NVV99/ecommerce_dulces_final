@@ -21,31 +21,77 @@
         </h2>
 
         <!-- FORMULARIO DE ENVÍO -->
-        <form id="checkout-form">
+        <form id="checkoutForm">
           <div class="row g-3">
             <div class="col-md-6">
               <label class="form-label">Nombre Completo</label>
-              <input type="text" id="fullName" class="form-control" placeholder="Ej: Juan Pérez" required>
+              <input
+                type="text"
+                id="fullName"
+                name="fullName"
+                class="form-control"
+                placeholder="Ej: Juan Pérez"
+                required
+              >
             </div>
             <div class="col-md-6">
               <label class="form-label">Teléfono</label>
-              <input type="tel" id="phone" class="form-control" placeholder="666 123 456" required>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                class="form-control"
+                placeholder="666 123 456"
+                required
+              >
             </div>
             <div class="col-md-8">
               <label class="form-label">Dirección</label>
-              <input type="text" id="address" class="form-control" placeholder="Calle Aragón 123, piso 2" required>
+              <input
+                type="text"
+                id="address"
+                name="address"
+                class="form-control"
+                placeholder="Calle Aragón 123, piso 2"
+                required
+              >
             </div>
             <div class="col-md-4">
               <label class="form-label">Código Postal</label>
-              <input type="text" id="zip" class="form-control" placeholder="28080" required>
+              <input
+                type="text"
+                id="zip"
+                name="zip"
+                class="form-control"
+                placeholder="28080"
+                required
+              >
             </div>
             <div class="col-md-6">
               <label class="form-label">Ciudad</label>
-              <input type="text" id="city" class="form-control" placeholder="Zaragoza" required>
+              <input
+                type="text"
+                id="city"
+                name="city"
+                class="form-control"
+                placeholder="Zaragoza"
+                required
+              >
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">País</label>
+              <input
+                type="text"
+                id="country"
+                name="country"
+                class="form-control"
+                placeholder="España"
+                required
+              >
             </div>
           </div>
         </form>
-
+        
         <!-- PRODUCTOS EN EL CARRITO -->
         <h5 class="mt-4 mb-2 checkout-subtitle">
           <i class="fa-solid fa-box-open"></i> Productos Seleccionados

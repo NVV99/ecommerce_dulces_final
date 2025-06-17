@@ -2,7 +2,7 @@ export function getCart() {
   return JSON.parse(sessionStorage.getItem('cart') || '[]');
 }
 
-/** Guarda el carrito y refresca badge/modal si existen */
+/** Guarda el carrito y refresca */
 export function saveCart(cart) {
   sessionStorage.setItem('cart', JSON.stringify(cart));
   updateCartCount();

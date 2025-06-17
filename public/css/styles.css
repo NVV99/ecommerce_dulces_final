@@ -190,6 +190,11 @@ h3 {
   border: 1px solid #ddd;
 }
 
+/* Evita que el Session ID desborde el contenedor */
+#order-summary li {
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
 
 /* CANCEL/SUCCESS PAGE */
 .status-page {
